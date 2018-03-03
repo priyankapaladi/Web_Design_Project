@@ -1,4 +1,5 @@
 const express = require('express');
+var cors = require('cors');
 const app = express();
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const authentication = require('./routes/authentication')(router);
 
 //app.use(morgan('dev')); // to log all requests
 
-
+app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/blogApp/dist/'));

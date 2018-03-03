@@ -11,6 +11,10 @@ const userSchema = new Schema({
   email: {type: String, lowercase: true, required: true, unique: true}
 });
 
+userSchema.methods.comparePassword = function(password) {
+	return password.localeCompare(this.password);
+}
+
 // Schema Middleware to Encrypt Password
 // userSchema.pre('save', function(next) {
 //   // Ensure password is new or modified before applying encryption
