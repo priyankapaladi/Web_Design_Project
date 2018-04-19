@@ -83,6 +83,19 @@ export class AuthService {
     return this.http.get(this.domain + 'authentication/publicProfile/' + username, this.options).map(res => res.json());
   }
 
+//Function to save profile picture
+  saveProfilePicture(username, image) {
+  console.log("In auth service");
+  this.createAuthenticationHeaders(); 
+  return this.http.get(this.domain + 'authentication/profilePicture/' + username + '/'+ image, this.options).map(res => res.json());
+  }
+
+  //Function to get profile picture
+  getProfilePicture(username){
+  console.log("In auth service");
+  this.createAuthenticationHeaders(); 
+  return this.http.get(this.domain + 'authentication/getprofilePicture/' + username, this.options).map(res => res.json());
+  }
 
   // Function to check if user is logged in
   loggedIn() {

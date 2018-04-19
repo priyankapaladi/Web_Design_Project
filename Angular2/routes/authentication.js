@@ -1,6 +1,7 @@
 const User = require('../models/user'); // Import User Model Schema
 const jwt = require('jsonwebtoken'); // Compact, URL-safe means of representing claims to be transferred between two parties.
 const config = require('../config/database'); // Import database configuration
+let fs = require('fs');
 
 module.exports = (router) => {
   /*
@@ -191,7 +192,7 @@ module.exports = (router) => {
    =============================================================== */
    router.get('/profile', (req, res) => {
      // Search for user in database
-     User.findOne({ _id: req.decoded.userId }).select('username email aboutUser').exec((err, user) => {
+     User.findOne({ _id: req.decoded.userId }).select('username email aboutUser displayImage').exec((err, user) => {
        // Check if error connecting
        if (err) {
          res.json({ success: false, message: err }); // Return error
@@ -225,6 +226,76 @@ module.exports = (router) => {
             res.json({ success: false, message: 'Username not found.' }); // Return error message
           } else {
             res.json({ success: true, user: user }); // Return the public user's profile data
+          }
+        }
+      });
+    }
+  });
+
+   /* ===============================================================
+     Route to save user's public profile image
+  =============================================================== */
+  router.get('/profilePicture/:username/:displayImage', (req, res) => {
+    // Check if username was passed in the parameters
+    console.log("Hi, in authentication, username is"+req.params.username);
+    console.log("Hi, in authentication, displayImage is"+req.params.displayImage);
+
+    User.findOne({ _id: req.decoded.userId } , (err, user1) => {
+
+      if (err) {
+        res.json({ success: false, message: 'Something went wrong' }); // Return error message
+      } else {
+        // Check if user was found in the database
+        if (!user1) {
+          res.json({ success: false, message: 'Username not found! Cannot update the userdata' }); // Return error message
+        } else {
+          console.log("Yay! we got the user");
+          user1.displayImage.data = req.params.displayImage;
+          user1.displayImage.contentType = 'image/png';
+          user1.save((err) => {
+            if (err) {
+              if (err.errors) {
+                console.log(err.errors);
+                res.json({ success: false, message: 'Please ensure image is added properly' });
+              } else {
+                res.json({ success: false, message: err }); // Return error message
+              }
+            } else {
+              res.json({ success: true, message: 'User Profile Pic Updated!' }); // Return success message
+            }
+          });
+        //  res.json({ success: true, user: user }); // Return the public user's profile data
+        }
+      }
+    });
+  });
+
+ /* ===============================================================
+     Route to get user's  profile image
+  =============================================================== */
+  router.get('/getprofilePicture/:username', (req, res) => {
+    // Check if username was passed in the parameters
+    console.log("here at backend!!")
+    if (!req.params.username) {
+      res.json({ success: false, message: 'No username was provided' }); // Return error message
+    } else {
+      // Check the database for username
+      User.findOne({ username: req.params.username }).select('username email aboutUser displayImage').exec((err, user) => {
+        // Check if error was found
+        if (err) {
+          res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+        } else {
+          // Check if user was found in the database
+          if (!user) {
+            res.json({ success: false, message: 'Username not found.' }); // Return error message
+          } else {
+            console.log("Yay, we found image");
+            res.contentType(user.displayImage.contentType);
+            var base64 = (user.displayImage.data.toString('base64'));
+            res.send({success: true, user:base64});
+            // res.writeHead('200', {'Content-Type': 'image/png'})
+            // res.end(user.displayImage.data, 'binary');
+            //res.json({ success: true, user: user }); // Return the public user's profile data
           }
         }
       });

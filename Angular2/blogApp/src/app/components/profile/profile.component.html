@@ -13,5 +13,13 @@
 <br/>
 <button type="saveButton" name="saveButton" class="btn btn-sm btn-info" (click)="saveAboutUser(aboutUser)">Save</button>
 
+<div>
+	 <h2>Upload Image</h2>
+ 	 <input type="file" accept="image/*" (change)="handleInputChange($event)"/>
+</div>
+<div id="displayStoredImage">
+{{displayImage}}
+</div>
+
 </div>
 </div>
