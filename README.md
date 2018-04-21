@@ -23,6 +23,9 @@ All the components have their own functionality whose details can be seen their 
 
 You can also install Robo3T to see the structure of the schema and view the data being saved as and when you use the application.
 
-
+Contributors:
+Labdhi Shah
+Gauri Chavan
+Priyanka Paladi Rajagopal
 
 
