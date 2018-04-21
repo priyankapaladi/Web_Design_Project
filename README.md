@@ -1,6 +1,6 @@
-# MEAN Stack Project - Blogging Application
+## MEAN Stack Project - Blogging Application
 
-BlogSpace
+# BlogSpace
 
 Requirements for this project are:
 Angular2 CLI
